@@ -2,7 +2,6 @@ import streamlit as st
 from preprocess import load_and_preprocess
 from model import train_model
 
-# Full names of antibiotics
 antibiotic_full_names = {
     'CIP/LE': 'Ciprofloxacin/Levofloxacin',
     'COT': 'Cotrimoxazole (Trimethoprim-Sulfamethoxazole)',
@@ -42,16 +41,13 @@ antibiotic_full_names = {
     'ESBL': 'Extended-Spectrum Beta-Lactamase'
 }
 
-# Load data and model
 filepath = "ANTIBIOTIC.xlsx"
 df, resistance_cols = load_and_preprocess(filepath)
 model, feature_cols, report = train_model(df, resistance_cols)
 
-# UI
 st.title("Smart Antibiotic Advisor")
 st.text("Select all options for the better accuracy.")
 
-# Dropdowns
 depts = ['--'] + ['All'] + sorted(df['DEPT'].dropna().unique())
 samples = ['--'] + ['All'] + sorted(df['SAMPLE'].dropna().unique())
 organisms = ['--'] + ['All'] + sorted(df['ORGANISM'].dropna().unique())
@@ -62,7 +58,6 @@ sample = st.selectbox("Select SAMPLE", samples)
 organism = st.selectbox("Select ORGANISM", organisms)
 org_group = st.selectbox("Select Org Group", org_groups)
 
-# Filter logic
 if dept == "--" and sample == "--" and organism == "--" and org_group == "--":
     st.info("Please select any option to get a prediction.")
 elif dept == "All" and sample == "All" and organism == "All" and org_group == "All":
@@ -84,7 +79,6 @@ else:
         features = input_row[feature_cols].replace({'R': 1, 'S': 0, 'I': 0}).values.reshape(1, -1)
         prediction = model.predict(features)[0]
 
-        # Show results
         raw_values = input_row[feature_cols]
         resistant = [ab for ab in feature_cols if raw_values[ab] == 'R']
         sensitive = [ab for ab in feature_cols if raw_values[ab] in ['S', 'I', 'A']]
