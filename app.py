@@ -1,3 +1,4 @@
+import icon
 import streamlit as st
 from preprocess import load_and_preprocess
 from model import train_model
@@ -45,13 +46,14 @@ filepath = "ANTIBIOTIC.xlsx"
 df, resistance_cols = load_and_preprocess(filepath)
 model, feature_cols, report = train_model(df, resistance_cols)
 
+st.image("icon.png", width = 100)
 st.title("Smart Antibiotic Advisor")
 st.text("Select all options for the better accuracy.")
 
-depts = ['--'] + ['All'] + sorted(df['DEPT'].dropna().unique())
-samples = ['--'] + ['All'] + sorted(df['SAMPLE'].dropna().unique())
-organisms = ['--'] + ['All'] + sorted(df['ORGANISM'].dropna().unique())
-org_groups = ['--'] + ['All'] + sorted(df['Org Group'].dropna().unique())
+depts = ['--'] + sorted(df['DEPT'].dropna().unique())
+samples = ['--'] + sorted(df['SAMPLE'].dropna().unique())
+organisms = ['--'] + sorted(df['ORGANISM'].dropna().unique())
+org_groups = ['--'] + sorted(df['Org Group'].dropna().unique())
 
 dept = st.selectbox("Select DEPT", depts)
 sample = st.selectbox("Select SAMPLE", samples)
